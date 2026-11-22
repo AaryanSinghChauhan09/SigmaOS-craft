@@ -1,0 +1,12 @@
+[package]
+name = "sigmaos-craft"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+description = "SigmaOS component: craft"
+
+[dependencies]
+
+[[bin]]
+name = "sigmaos-craft"
+path = "src/main.rs"
