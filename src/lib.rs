@@ -20,6 +20,8 @@ pub enum CraftError {
     RecipeNotFound(String),
     #[error("item not found: {0}")]
     ItemNotFound(String),
+    #[error("not found: {0}")]
+    NotFound(String),
     #[error("insufficient ingredients for '{0}'")]
     Insufficient(String),
     #[error("validation error: {0}")]
