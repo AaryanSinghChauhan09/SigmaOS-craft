@@ -87,9 +87,9 @@ impl Inventory {
 
     /// Check if inventory has all ingredients.
     pub fn has_ingredients(&self, ingredients: &BTreeMap<String, u32>) -> bool {
-        ingredients.iter().all(|(id, n)| {
-            self.items.get(id).copied().unwrap_or(0) >= *n
-        })
+        ingredients
+            .iter()
+            .all(|(id, n)| self.items.get(id).copied().unwrap_or(0) >= *n)
     }
 }
 

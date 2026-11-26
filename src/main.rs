@@ -24,7 +24,11 @@ enum Commands {
     /// Craft a recipe.
     Craft { recipe: String },
     /// Give an item.
-    Give { item: String, #[arg(long, default_value_t = 1)] count: u32 },
+    Give {
+        item: String,
+        #[arg(long, default_value_t = 1)]
+        count: u32,
+    },
     /// Initialize state with starter items/recipes.
     Init,
     /// Print state path.
@@ -64,9 +68,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         Commands::Recipes => {
             for r in st.recipes.values() {
-                let ings: Vec<String> = r.ingredients.iter()
-                    .map(|(i, n)| format!("{i}x{n}")).collect();
-                println!("{}: {} -> {} x{}", r.id, ings.join("+"), r.output, r.output_count);
+                let ings: Vec<String> = r
+                    .ingredients
+                    .iter()
+                    .map(|(i, n)| format!("{i}x{n}"))
+                    .collect();
+                println!(
+                    "{}: {} -> {} x{}",
+                    r.id,
+                    ings.join("+"),
+                    r.output,
+                    r.output_count
+                );
             }
         }
         Commands::Craftable => {
