@@ -219,3 +219,93 @@ pub fn starter_state() -> CraftState {
     });
     s
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn state() -> CraftState {
+        starter_state()
+    }
+
+    fn give(s: &mut CraftState, id: &str, n: u32) {
+        s.inventory.add(id, n);
+    }
+
+    #[test]
+    fn inventory_add_remove() {
+        let mut inv = Inventory::default();
+        inv.add("wood", 3);
+        inv.add("wood", 2);
+        assert_eq!(inv.items["wood"], 5);
+        inv.remove("wood", 4).unwrap();
+        assert_eq!(inv.items["wood"], 1);
+        inv.remove("wood", 2).unwrap_err();
+        inv.remove("wood", 1).unwrap();
+        assert!(!inv.items.contains_key("wood"));
+    }
+
+    #[test]
+    fn craft_consumes_and_produces() {
+        let mut s = state();
+        give(&mut s, "wood", 1);
+        assert!(s.can_craft("plank").unwrap());
+        let made = s.craft("plank").unwrap();
+        assert_eq!(made, 4);
+        assert!(!s.inventory.items.contains_key("wood"));
+        assert_eq!(s.inventory.items["plank"], 4);
+        // can't craft twice with only 1 wood left
+        assert!(!s.can_craft("plank").unwrap());
+        assert!(s.craft("plank").is_err());
+    }
+
+    #[test]
+    fn craftable_lists_possible() {
+        let mut s = state();
+        give(&mut s, "wood", 1);
+        give(&mut s, "plank", 2);
+        let ids: Vec<&str> = s.craftable().iter().map(|r| r.id.as_str()).collect();
+        assert!(ids.contains(&"plank"));
+        assert!(ids.contains(&"stick"));
+        assert!(!ids.contains(&"torch"));
+    }
+
+    #[test]
+    fn unknown_recipe_errors() {
+        let mut s = state();
+        assert!(s.craft("nope").is_err());
+        assert!(s.can_craft("nope").is_err());
+    }
+
+    #[test]
+    fn validation_rejects_empty_ids() {
+        let mut s = state();
+        let item = Item {
+            id: String::new(),
+            name: "x".into(),
+            stack_max: 1,
+            description: String::new(),
+        };
+        assert!(s.add_item(item).is_err());
+        let recipe = Recipe {
+            id: String::new(),
+            name: "x".into(),
+            ingredients: BTreeMap::new(),
+            output: "wood".into(),
+            output_count: 1,
+        };
+        assert!(s.add_recipe(recipe).is_err());
+    }
+
+    #[test]
+    fn save_load_roundtrip() {
+        let mut s = state();
+        give(&mut s, "wood", 7);
+        let path = std::env::temp_dir().join("sigmaos-craft-test.json");
+        s.save(&path).unwrap();
+        let back = CraftState::load(&path).unwrap();
+        assert_eq!(back.inventory.items["wood"], 7);
+        assert!(back.recipes.contains_key("plank"));
+        let _ = std::fs::remove_file(&path);
+    }
+}
