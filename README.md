@@ -27,3 +27,13 @@ GPL-3.0-or-later
 Wiki documentation is available in the SigmaOS Wiki Staging repository:
 
 - [SigmaOS Wiki Staging](https://github.com/AaryanSinghChauhan09/sigmaos-wiki-staging#SigmaOS-craft) - Full Wiki documentation for all SigmaOS components
+
+## See Also
+
+Related SigmaOS **Office** repositories:
+
+- [SigmaOS-betteroffice](../SigmaOS-betteroffice/README.md) — SigmaOS BetterOffice suite
+- [SigmaOS-genoffice](../SigmaOS-genoffice/README.md) — SigmaOS GenOffice document suite
+- [SigmaOS-iloveapi](../SigmaOS-iloveapi/README.md) — SigmaOS iLoveAPI / PDF & media utilities
+- [SigmaOS-libreoffice](../SigmaOS-libreoffice/README.md) — SigmaOS LibreOffice integration
+- [SigmaOS-onlyoffice](../SigmaOS-onlyoffice/README.md) — SigmaOS OnlyOffice integration
